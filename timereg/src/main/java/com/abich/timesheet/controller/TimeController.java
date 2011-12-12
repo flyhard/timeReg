@@ -19,7 +19,7 @@ import com.abich.timesheet.hibernate.services.HoursService;
 public class TimeController {
 	private static Logger logger = LoggerFactory
 			.getLogger(TimeController.class);
-	private static final String PAGED_LIST_HOLDER = "pagedListHolder";
+	private static final String PAGED_LIST_HOLDER = "hoursPagedListHolder";
 	@Resource
 	private HoursService hoursService;
 
@@ -30,12 +30,8 @@ public class TimeController {
 			final Model model, final HttpSession session) {
 		Integer pageNo = page;
 		PagedListHolder<Hour> pagedListHolder;
-		if (page == -1) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("reading Hours from DB");
-			}
-			pagedListHolder = new PagedListHolder<Hour>(hoursService.getAll());
-			session.setAttribute(PAGED_LIST_HOLDER, pagedListHolder);
+		if (page < 0) {
+			pagedListHolder = initializePagedListHolder(session);
 			pageNo = 0;
 		} else {
 			if (logger.isDebugEnabled()) {
@@ -43,10 +39,24 @@ public class TimeController {
 			}
 			pagedListHolder = (PagedListHolder<Hour>) session
 					.getAttribute(PAGED_LIST_HOLDER);
+			if (pagedListHolder == null) {
+				pagedListHolder = initializePagedListHolder(session);
+			}
 		}
 		pagedListHolder.setPageSize(10);
 		pagedListHolder.setPage(pageNo);
 		model.addAttribute("hours", pagedListHolder);
 		return "time/show";
+	}
+
+	private PagedListHolder<Hour> initializePagedListHolder(
+			final HttpSession session) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("reading Hours from DB");
+		}
+		PagedListHolder<Hour> pagedListHolder;
+		pagedListHolder = new PagedListHolder<Hour>(hoursService.getAll());
+		session.setAttribute(PAGED_LIST_HOLDER, pagedListHolder);
+		return pagedListHolder;
 	}
 }

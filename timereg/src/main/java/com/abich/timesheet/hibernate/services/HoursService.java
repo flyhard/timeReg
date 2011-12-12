@@ -35,7 +35,7 @@ public class HoursService {
 		Session session = sessionFactory.getCurrentSession();
 
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM  Hour");
+		Query query = session.createQuery("FROM  Hour ORDER BY id desc");
 
 		// Retrieve all
 		return query.list();
