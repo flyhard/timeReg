@@ -15,18 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.abich.timesheet.hibernate.beans.Hour;
 
 @Service("hourService")
-public class HoursService {
+public class HoursServiceImpl implements HourService {
 	private static final Logger logger = LoggerFactory
-			.getLogger(HoursService.class);
+			.getLogger(HoursServiceImpl.class);
 
 	@Resource(name = "sessionFactory")
 	private SessionFactory sessionFactory;
 
-	/**
-	 * Retrieves all hours
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return a list of hours
+	 * @see com.abich.timesheet.hibernate.services.HourService#getAll()
 	 */
+	@Override
 	@Transactional
 	public List<Hour> getAll() {
 		logger.debug("Retrieving all hours");
@@ -39,6 +40,20 @@ public class HoursService {
 
 		// Retrieve all
 		return query.list();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abich.timesheet.hibernate.services.HourService#update(com.abich.timesheet
+	 * .hibernate.beans.Hour)
+	 */
+	@Override
+	public Hour update(final Hour hour) {
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(hour);
+		return hour;
 	}
 
 }

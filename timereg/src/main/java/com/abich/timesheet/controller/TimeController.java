@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.abich.timesheet.hibernate.beans.Hour;
-import com.abich.timesheet.hibernate.services.HoursService;
+import com.abich.timesheet.hibernate.services.HourService;
 
 @Controller
 @RequestMapping("/time")
@@ -21,7 +23,7 @@ public class TimeController {
 			.getLogger(TimeController.class);
 	private static final String PAGED_LIST_HOLDER = "hoursPagedListHolder";
 	@Resource
-	private HoursService hoursService;
+	private HourService hoursService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/show")
@@ -47,6 +49,13 @@ public class TimeController {
 		pagedListHolder.setPage(pageNo);
 		model.addAttribute("hours", pagedListHolder);
 		return "time/show";
+	}
+
+	@RequestMapping("/update")
+	@ResponseBody
+	public Hour updateHour(@RequestBody final Hour hour) {
+		return hoursService.update(hour);
+
 	}
 
 	private PagedListHolder<Hour> initializePagedListHolder(
