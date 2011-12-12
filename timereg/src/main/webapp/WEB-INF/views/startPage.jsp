@@ -10,6 +10,7 @@
 	<h1>TimeReg</h1>
 	<ul>
 		<li><a href="time/show.html">show hours</a></li>
+        <li><a href="readme.htm">SilkIcons</a></li>
 	</ul>
 </body>
 </html>
